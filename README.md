@@ -16,6 +16,10 @@ This is a super simple game loosely based on Minesweeper Flags and runs on the [
 ## Game Over
 ![Game Over](https://github.com/desireevl/quantum-catsweeper/blob/master/images/lost.png)
 
+# How to play
+
+You click with the left arrow.
+
 # Explanation
 The placement of the bombs are determined using the [ANU Quantum Random Number Generator](https://qrng.anu.edu.au/). A Hadamard gate is used on the qubit that represents the bomb and when the tile is clicked, the qubit is measured. It has a 50/50 chance of evaluating to a 1 (bomb explodes) or a 0 (bomb defuses).
 
@@ -24,6 +28,21 @@ A half NOT gate is applied to each qubit representing a number tile. For example
 The golden cat moves around based on your click. If you find it you win 100% of the time. If you reveal a tile with a positive (not !) or neutral evaluation (defused bombs, blank tiles) then the cat moves one space in the direction of the tile you just clicked. If a negatively evaluated tile is clicked the golden cat moves one space away. This knowledge can be used as strategy to win the game. 
 
 # Installation Guide
+
+Note : Qiskit dependency version is a really old version = 0.5.7
+
+To update the version, you must modify the existing code and use up-to-date equivalents. 
+
+For example, QuantumProgram is deprecated, you must now separately create a circuit and launch the `execute(circuit, backend)` method. [Source](https://qiskit.org/documentation/release_notes.html)
+
+## For Windows
+
+Install :
+- Python 3
+- GLFW Library from the [official website](https://www.glfw.org/download.html)
+
+## For Linux
+
 ```bash
 apt-get install python3 python3-pip libglfw3 libportaudio2 libasound-dev
 
@@ -32,3 +51,11 @@ pip install -r requirements.txt
 python main.py
 python main.py debug # For debugging mode
 ```
+
+# Changes made in order for the game to work
+
+Commented the `qiskit.register()` method
+Changed the order of initialization of window
+Move `images` location
+Lowered the sound and disabled the loop of the main music
+Changed `LEFT_KEY_BUTTON` to `LEFT_KEY`, then to `LEFT_MOUSE_BUTTON` because why use the left arrow?

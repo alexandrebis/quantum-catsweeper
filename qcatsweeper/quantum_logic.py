@@ -39,7 +39,7 @@ if real_device:
     device = 'ibmqx4'
 
 Q_program = QuantumProgram()
-qiskit.register(qconfig.APItoken, qconfig.config["url"])
+#qiskit.register(qconfig.APItoken, qconfig.config["url"])
 
 
 def get_one_or_zero(grid_script, q, c, index):

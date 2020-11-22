@@ -25,7 +25,6 @@ class QuantumCatsweeperApp:
     def __init__(self, width=153, height=170, debugging=False):
         # Initialize game state
         self.game_state = GameState.INTRO
-
         self.debugging = debugging
 
         self._main_cat_asset = 0
@@ -53,6 +52,8 @@ class QuantumCatsweeperApp:
         self.golden_cat_x = -1
         self.golden_cat_y = -1
 
+        pyxel.init(self._width, self._height, caption='Quantum Catsweeper')
+
         self._play_real_button_pos = self.pyxel_button_centered(
             'Play', 100)
         self._help_button_pos = self.pyxel_button_centered(
@@ -63,8 +64,6 @@ class QuantumCatsweeperApp:
         self._won_playagain_button = self.pyxel_button_centered(
             'Play Again', 100)
 
-        pyxel.init(self._width, self._height, caption='Quantum Catsweeper')
-
         pyxel.image(self._main_cat_asset).load(0, 0, 'assets/cat_16x16.png')
         pyxel.image(self._exploding_cat_asset).load(
             0, 0, 'assets/explo_cat_31x25.png')
@@ -74,7 +73,7 @@ class QuantumCatsweeperApp:
         # Sound
         pyxel.sound(self._main_bg).set(
             'e2e2c2g1 g1g1c2e2 d2d2d2g2 g2g2rr'
-            'c2c2a1e1 e1e1a1c2 b1b1b1e2 e2e2rr', 'p', '6',
+            'c2c2a1e1 e1e1a1c2 b1b1b1e2 e2e2rr', 'p', '3',
             'vffn fnff vffs vfnn', 25)
         pyxel.sound(self._playing_bg).set(
             'f0c1f0c1 g0d1g0d1 c1g1c1g1 a0e1a0e1'
@@ -83,7 +82,7 @@ class QuantumCatsweeperApp:
             'c1g1c1g1 c1g1c1g1 b0g1b0g1 b0g1b0g1'
             'a0e1a0e1 a0e1a0e1 g0d1g0d1 g0d1g0d1', 't', '7', 'n', 25)
 
-        pyxel.play(self._main_bg, [0, 1], loop=True)
+        pyxel.play(self._main_bg, [0, 1], loop=False)
 
         pyxel.run(self.update, self.draw)
 
@@ -130,7 +129,7 @@ class QuantumCatsweeperApp:
     #### Event handlers ####
 
     def handle_wongame_events(self):
-        if pyxel.btnp(pyxel.KEY_LEFT_BUTTON):
+        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON):
             mouse_within = partial(is_within, pyxel.mouse_x, pyxel.mouse_y)
 
             if mouse_within(self._won_playagain_button):
@@ -143,7 +142,7 @@ class QuantumCatsweeperApp:
                 self.game_state = GameState.INTRO
 
     def handle_lostgame_events(self):
-        if pyxel.btnp(pyxel.KEY_LEFT_BUTTON):
+        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON):
             mouse_within = partial(is_within, pyxel.mouse_x, pyxel.mouse_y)
 
             if mouse_within(self._playing_real_back_button):
@@ -158,7 +157,7 @@ class QuantumCatsweeperApp:
                 pyxel.play(self._playing_bg, [2, 3], loop=True)
 
     def handle_playing_events(self):
-        if pyxel.btnp(pyxel.KEY_LEFT_BUTTON):
+        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON):
             mouse_within = partial(is_within, pyxel.mouse_x, pyxel.mouse_y)
 
             if mouse_within(self._playing_real_back_button):
@@ -245,17 +244,19 @@ class QuantumCatsweeperApp:
                         pyxel.play(self._losing_bg, 4, loop=True)
 
     def handle_help_events(self):
-        if pyxel.btnp(pyxel.KEY_LEFT_BUTTON):
+        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON):
             mouse_within = partial(is_within, pyxel.mouse_x, pyxel.mouse_y)
 
             if mouse_within(self._help_back_button_pos):
                 self.game_state = GameState.INTRO
 
     def handle_intro_events(self):
-        if pyxel.btnp(pyxel.KEY_LEFT_BUTTON):
+        if pyxel.btnp(pyxel.MOUSE_LEFT_BUTTON):
             mouse_within = partial(is_within, pyxel.mouse_x, pyxel.mouse_y)
 
+
             if mouse_within(self._play_real_button_pos):
+                print("HELLO")
                 self.reset_game()
                 self.game_state = GameState.PLAYING_REAL
 
