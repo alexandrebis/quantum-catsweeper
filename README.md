@@ -59,3 +59,7 @@ Changed the order of initialization of window
 Move `images` location
 Lowered the sound and disabled the loop of the main music
 Changed `LEFT_KEY_BUTTON` to `LEFT_KEY`, then to `LEFT_MOUSE_BUTTON` because why use the left arrow?
+
+# Changes ideas
+
+Use one of the IBM Quantum backends
