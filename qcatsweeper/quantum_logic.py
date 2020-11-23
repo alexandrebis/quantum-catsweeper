@@ -6,6 +6,7 @@ import qiskit
 import math
 import random
 import quantumrandom as qr
+from qrng import get_bit_string
 
 
 class TileItems(Enum):
@@ -16,10 +17,10 @@ class TileItems(Enum):
     GROUP3 = 2
     GROUP4 = -2
     GROUP5 = 3
-    GROUP6 = -3    
+    GROUP6 = -3
 
     BOMB_UNEXPLODED = 7
-    BOMB_EXPLODED = 8    
+    BOMB_EXPLODED = 8
 
     REVEAL_GROUP = 9
 
@@ -39,7 +40,9 @@ if real_device:
     device = 'ibmqx4'
 
 Q_program = QuantumProgram()
-#qiskit.register(qconfig.APItoken, qconfig.config["url"])
+
+
+# qiskit.register(qconfig.APItoken, qconfig.config["url"])
 
 
 def get_one_or_zero(grid_script, q, c, index):
@@ -51,8 +54,8 @@ def get_one_or_zero(grid_script, q, c, index):
     re = results.get_counts("gridScript")
     d1 = list(map(lambda x: (x[0], x[1], x[0].count('0')), re.items()))
     d2 = sorted(d1, key=lambda x: x[2], reverse=True)
-    
-    print(d2)    
+
+    print(d2)
     if d2[0][1] > d2[1][1]:
         return 0
     return 1
@@ -70,25 +73,27 @@ def new_game_grid(l, bomb_no=20):
 
     for y in range(0, l, 4):
         for x in range(0, l, 6):
-            for _y in range(y, y+4):
-                for _x in range(x, x+6):
+            for _y in range(y, y + 4):
+                for _x in range(x, x + 6):
                     if _groups[_y][_x] >= 1:
                         game_grid[_y][_x] = _index[_cur]
             _cur += 1
 
     # ANU quantum random number generator to generate 20 bomb positions
-    bomb_xy = qr.get_data(data_type='uint16', array_length=bomb_no * 2)
+    # bomb_xy = qr.get_data(data_type='uint16', array_length=bomb_no * 2)
+    bomb_xy = [int(random.randint(0, 64554)) for i in range(bomb_no * 2)]
+    # bomb_xy = [int(get_bit_string(16), 2) for i in range(bomb_no * 2)]
     bomb_xy = list(map(lambda x: x % l, bomb_xy))
     # classical random number generator for debugging
     # bomb_xy = [random.randint(0, l-1) for i in range(bomb_no * 2)]
-    bomb_xy = [bomb_xy[i:i+2] for i in range(0, bomb_no * 2, 2)]
+    bomb_xy = [bomb_xy[i:i + 2] for i in range(0, bomb_no * 2, 2)]
 
     for coord in bomb_xy:
         if len(coord) > 0:
             game_grid[coord[0]][coord[1]] = TileItems.BOMB_UNEXPLODED
 
     # golden Cat
-    game_grid[random.randint(0, l-1)][random.randint(0, l-1)] = TileItems.GOLDEN_CAT
+    game_grid[random.randint(0, l - 1)][random.randint(0, l - 1)] = TileItems.GOLDEN_CAT
 
     return game_grid
 
@@ -98,7 +103,7 @@ def onclick(clicked_tile, num_clicks):
     params:
     clicked_tile: tile type of the clicked tile
     num_click: number of times a group has been clicked
-    """    
+    """
     q = Q_program.create_quantum_register("q", 5)
     c = Q_program.create_classical_register("c", 5)
     gridScript = Q_program.create_circuit("gridScript", [q], [c])
@@ -106,7 +111,7 @@ def onclick(clicked_tile, num_clicks):
     if (clicked_tile == TileItems.BOMB_UNEXPLODED):
         # hadamard gate applied to bomb qubit
         gridScript.h(q[0])
-        
+
         # if there are more 1 hits then the bomb expodes and the game is lost
         if get_one_or_zero(gridScript, q, c, 0) == 1:
             return TileItems.BOMB_EXPLODED
@@ -115,7 +120,7 @@ def onclick(clicked_tile, num_clicks):
     elif (clicked_tile == TileItems.GROUP1 or clicked_tile == TileItems.GROUP2):  # 1 click
         # half not gate applied to the 1 click number tiles
         gridScript.u3(0.5 * math.pi, 0.0, 0.0, q[1])
-        
+
         # if more 1 hits then the whole tile group is revealed
         if get_one_or_zero(gridScript, q, c, 1) == 1:
             return TileItems.REVEAL_GROUP
@@ -139,13 +144,13 @@ def onclick(clicked_tile, num_clicks):
     elif (clicked_tile == TileItems.GROUP5 or clicked_tile == TileItems.GROUP6):  # 3 clicks
         if num_clicks == 1:
             gridScript.u3(0.5 * math.pi, 0.0, 0.0, q[3])
- 
+
             if get_one_or_zero(gridScript, q, c, 3) == 1:
                 return TileItems.POS_EVAL
             return TileItems.NEG_EVAL
 
         elif num_clicks == 2:
-            gridScript.u3(0.5 * math.pi, 0.0, 0.0, q[3])            
+            gridScript.u3(0.5 * math.pi, 0.0, 0.0, q[3])
 
             if get_one_or_zero(gridScript, q, c, 3) == 1:
                 return TileItems.POS_EVAL
