@@ -60,7 +60,11 @@ Move `images` location
 Lowered the sound and disabled the loop of the main music
 Changed `LEFT_KEY_BUTTON` to `LEFT_KEY`, then to `LEFT_MOUSE_BUTTON` because why use the left arrow?
 Replace quantum random by regular random
+Set `pyxel.mouse(True)` to see the cursor
 
 # Changes ideas
 
 Use one of the IBM Quantum backends
+Use a more recent version of Qiskit
+Implement real minesweeper logic
+Correctly size the window
