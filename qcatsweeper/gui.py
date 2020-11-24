@@ -53,7 +53,7 @@ class QuantumCatsweeperApp:
         self.golden_cat_y = -1
 
         pyxel.init(self._width, self._height, caption='Quantum Catsweeper')
-
+        pyxel.mouse(True)
         self._play_real_button_pos = self.pyxel_button_centered(
             'Play', 100)
         self._help_button_pos = self.pyxel_button_centered(
