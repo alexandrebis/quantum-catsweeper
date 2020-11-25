@@ -1,5 +1,4 @@
 pyxel
 qiskit==0.5.7
 quantumrandom
-qrng
-IBMQ
+numpy==1.19.3

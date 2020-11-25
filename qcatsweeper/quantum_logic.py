@@ -6,7 +6,6 @@ import qiskit
 import math
 import random
 import quantumrandom as qr
-from qrng import get_bit_string
 
 
 class TileItems(Enum):

@@ -27,42 +27,54 @@ A half NOT gate is applied to each qubit representing a number tile. For example
 
 The golden cat moves around based on your click. If you find it you win 100% of the time. If you reveal a tile with a positive (not !) or neutral evaluation (defused bombs, blank tiles) then the cat moves one space in the direction of the tile you just clicked. If a negatively evaluated tile is clicked the golden cat moves one space away. This knowledge can be used as strategy to win the game. 
 
-# Installation Guide
+# Installation and launching Guide
 
-Note : Qiskit dependency version is a really old version = 0.5.7
+Note : The current Qiskit dependency version is a really old version = 0.5.7. To update the version, you must modify the existing code and use up-to-date equivalents. For example, QuantumProgram is deprecated, you must now separately create a circuit and launch the `execute(circuit, backend)` method. [Source](https://qiskit.org/documentation/release_notes.html)
 
-To update the version, you must modify the existing code and use up-to-date equivalents. 
+Python 3 is needed
 
-For example, QuantumProgram is deprecated, you must now separately create a circuit and launch the `execute(circuit, backend)` method. [Source](https://qiskit.org/documentation/release_notes.html)
-
-## For Windows
-
-Install :
-- Python 3
-- GLFW Library from the [official website](https://www.glfw.org/download.html)
-
-## For Linux
-
+(Optional but strongly recommended) set up a venv with the command :
 ```bash
-apt-get install python3 python3-pip libglfw3 libportaudio2 libasound-dev
+python -m venv venv
+source venv/Scripts/activate
+```
 
+Install the dependencies with :
+```bash
 pip install -r requirements.txt
+``` 
 
+As a temporary workaround, you have to modify your qiskit dependency manually.
+
+Go to : `\venv\lib\site-packages\qiskit\dagcircuit\` and replace all occurences of `.node[` with `._node[` in the following files :
+- _dagcircuit.py
+- _dagunroller.py
+
+Launch with :
+```bash
 python main.py
 python main.py debug # For debugging mode
 ```
 
-# Changes made in order for the game to work
+
+# Changelog
+
+## Last Version
+
+### Changes
 
 Commented the `qiskit.register()` method
 Changed the order of initialization of window
 Move `images` location
 Lowered the sound and disabled the loop of the main music
 Changed `LEFT_KEY_BUTTON` to `LEFT_KEY`, then to `LEFT_MOUSE_BUTTON` because why use the left arrow?
-Replace quantum random by regular random
+Replace quantum random by regular random and remove it from requirements
 Set `pyxel.mouse(True)` to see the cursor
+Remove IBMQ dependencies as it is not used
+Set last working numpy version
+Update README
 
-# Changes ideas
+### Changes ideas
 
 Use one of the IBM Quantum backends
 Use a more recent version of Qiskit
