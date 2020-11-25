@@ -106,5 +106,5 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-#qcatsweeper/qconfig.py
+qcatsweeper/qconfig.py
 qcatsweeper/temp.py
