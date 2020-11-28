@@ -101,7 +101,7 @@ def new_game_grid(grid_size, bomb_no=20):
     return game_grid
 
 
-def onclick(clicked_tile, num_clicks):
+def onclick(clicked_tile):
     """
     params:
     clicked_tile: tile type of the clicked tile
@@ -123,51 +123,5 @@ def onclick(clicked_tile, num_clicks):
     elif (clicked_tile == TileItems.BLANKS):
         return TileItems.BLANKS
 
-
-    """elif (clicked_tile == TileItems.GROUP1 or clicked_tile == TileItems.GROUP2):  # 1 click
-        # half not gate applied to the 1 click number tiles
-        gridScript.u3(0.5 * math.pi, 0.0, 0.0, q[1])
-
-        # if more 1 hits then the whole tile group is revealed
-        if get_one_or_zero(gridScript, q, c, 1) == 1:
-            return TileItems.REVEAL_GROUP
-        return TileItems.NEG_EVAL
-
-    elif (clicked_tile == TileItems.GROUP3 or clicked_tile == TileItems.GROUP4):  # 2 clicks
-        if num_clicks == 1:
-            gridScript.u3(0.5 * math.pi, 0.0, 0.0, q[2])
-
-            if get_one_or_zero(gridScript, q, c, 2) == 1:
-                return TileItems.POS_EVAL
-            return TileItems.NEG_EVAL
-
-        elif num_clicks == 2:
-            gridScript.u3(0.5 * math.pi, 0.0, 0.0, q[2])
-
-            if get_one_or_zero(gridScript, q, c, 2) == 1:
-                return TileItems.REVEAL_GROUP
-            return TileItems.NEG_EVAL
-
-    elif (clicked_tile == TileItems.GROUP5 or clicked_tile == TileItems.GROUP6):  # 3 clicks
-        if num_clicks == 1:
-            gridScript.u3(0.5 * math.pi, 0.0, 0.0, q[3])
-
-            if get_one_or_zero(gridScript, q, c, 3) == 1:
-                return TileItems.POS_EVAL
-            return TileItems.NEG_EVAL
-
-        elif num_clicks == 2:
-            gridScript.u3(0.5 * math.pi, 0.0, 0.0, q[3])
-
-            if get_one_or_zero(gridScript, q, c, 3) == 1:
-                return TileItems.POS_EVAL
-            return TileItems.NEG_EVAL
-
-        elif num_clicks == 3:
-            gridScript.u3(0.5 * math.pi, 0.0, 0.0, q[3])
-
-            if get_one_or_zero(gridScript, q, c, 3) == 1:
-                return TileItems.REVEAL_GROUP
-            return TileItems.NEG_EVAL"""
 
     return None

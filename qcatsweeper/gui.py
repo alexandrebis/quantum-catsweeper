@@ -3,7 +3,6 @@ from functools import partial
 
 import qcatsweeper.quantum_logic as ql
 import math
-import random
 import pyxel
 
 
@@ -19,7 +18,6 @@ class GameState(Enum):
 def is_within(x, y, pos):
     x1, y1, x2, y2 = pos
     return x >= x1 and x <= x2 and y >= y1 and y <= y2
-
 
 class QuantumCatsweeperApp:
     def __init__(self, width=153, height=170, debugging=False):
@@ -48,7 +46,6 @@ class QuantumCatsweeperApp:
         self.elapsed_frames = 0
         self.clicked_tiles = {}
         self.flagged_tiles = {}
-        self.clicked_group_times = {}
         self.reveal_groups = {}
         self.golden_cat_x = -1
         self.golden_cat_y = -1
@@ -157,6 +154,9 @@ class QuantumCatsweeperApp:
                 pyxel.stop(self._losing_bg)
                 pyxel.play(self._playing_bg, [2, 3], loop=True)
 
+    def is_flagged(self, pos):
+        return pos in self.flagged_tiles and self.flagged_tiles[pos]
+
     def handle_playing_events(self):
         if pyxel.btnp(pyxel.MOUSE_RIGHT_BUTTON):
             print("FLAGGING")
@@ -197,25 +197,16 @@ class QuantumCatsweeperApp:
 
                 clicked_tile = self.game_grid[row][col]
 
-                if ((row, col) not in self.clicked_tiles) and ((row, col) not in self.flagged_tiles or self.flagged_tiles[(row, col)] == False):
+                if ((row, col) not in self.clicked_tiles) and not self.is_flagged((row, col)):
                     self.clicked_tiles[(row, col)] = True
-
-                    # Commented because we want to move the cat if blank is revealed
-                    # if clicked_tile is ql.TileItems.BLANKS:
-                    #    return
 
                     if clicked_tile is ql.TileItems.GOLDEN_CAT:
                         self.game_state = GameState.WON
                         pyxel.stop(self._playing_bg)
                         pyxel.play(self._main_bg, [0, 1], loop=True)
 
-                    if clicked_tile not in self.clicked_group_times:
-                        self.clicked_group_times[clicked_tile] = 1
-
                     # Call quantum computer to see if we reveal of nah
-                    reveal_state = ql.onclick(
-                        clicked_tile, self.clicked_group_times[clicked_tile]
-                    )
+                    reveal_state = ql.onclick(clicked_tile)
                     print("Reveal state = ", reveal_state)
 
 
@@ -251,12 +242,6 @@ class QuantumCatsweeperApp:
                         self.game_grid_evaled[(row, col)] = str(
                             abs(clicked_tile.value)) + '!'
                         return
-
-                    if reveal_state is ql.TileItems.POS_EVAL:
-                        self.clicked_group_times[clicked_tile] += 1
-
-                    """if reveal_state is ql.TileItems.REVEAL_GROUP:
-                        self.reveal_groups[clicked_tile] = ql.TileItems.REVEAL_GROUP"""
 
                     # When bomb doesn't explode it turns into blank
                     if reveal_state is ql.TileItems.BOMB_DEFUSED:
@@ -314,10 +299,7 @@ class QuantumCatsweeperApp:
                 _x, _y = self.get_grid_xy_from_row_col(col, row)
 
                 cur_tile = self.game_grid[row][col]
-
-                if self.clicked_tiles.get((row, col), -1) == True:# \
-                        #or self.reveal_groups.get(cur_tile) == ql.TileItems.REVEAL_GROUP:
-
+                if self.clicked_tiles.get((row, col), -1) == True:
                     display_tile_text = "_empty"
 
                     if (row, col) in self.game_grid_evaled:
@@ -399,26 +381,23 @@ class QuantumCatsweeperApp:
                                   0, 0, self._grid_draw_size - 1, -1 * (self._grid_draw_size - 1), 8)
                         print("EXPLODED")
 
+                # Golden Cat (debug)
+                elif cur_tile is ql.TileItems.GOLDEN_CAT and self.debugging:
+                        pyxel.rect(_x, _y, _x + self._grid_draw_size -
+                                   2, _y - 2 + self._grid_draw_size, 1)
+                        pyxel.text(_x + 2, _y + 2, 'G', 12)
+
                 # Flags
+                elif self.flagged_tiles.get((row, col), -1) == True:
+                    print("Display flagged")
+                    pyxel.rect(_x, _y, _x + self._grid_draw_size -
+                               2, _y - 2 + self._grid_draw_size, 1)
+                    pyxel.text(_x + 2, _y + 2, "Flag", 7)
+
+                # Unclicked
                 else:
-                    if self.flagged_tiles.get((row, col), -1) == True:
-                        print("Display flagged")
-                        pyxel.rect(_x, _y, _x + self._grid_draw_size -
-                                   2, _y - 2 + self._grid_draw_size, 1)
-                        pyxel.text(_x + 2, _y + 2, 'G', 12)
-                    else:
-                        pyxel.rect(_x, _y, _x + self._grid_draw_size -
-                                   2, _y - 2 + self._grid_draw_size, 5)
-
-                    # Golden Cat (debug)
-                    if cur_tile is ql.TileItems.GOLDEN_CAT and self.debugging:
-                        pyxel.rect(_x, _y, _x + self._grid_draw_size -
-                                   2, _y - 2 + self._grid_draw_size, 1)
-                        pyxel.text(_x + 2, _y + 2, 'G', 12)
-
-                    else:
-                        pyxel.rect(_x, _y, _x + self._grid_draw_size -
-                                   2, _y - 2 + self._grid_draw_size, 5)
+                    pyxel.rect(_x, _y, _x + self._grid_draw_size -
+                               2, _y - 2 + self._grid_draw_size, 5)
 
     def draw_playscreen(self):
         self.draw_grid()
@@ -524,11 +503,9 @@ class QuantumCatsweeperApp:
 
     def reset_game(self):
         self.elapsed_frames = 0
-        self.clicked_group_times = {}
         self.clicked_tiles = {}
         self.flagged_tiles = {}
         self.reveal_groups = {}
-
         self.game_grid_evaled = {}
         self.game_grid = ql.new_game_grid(self._grid_size, bomb_no=20)
 
