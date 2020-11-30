@@ -1,11 +1,8 @@
-from qiskit import QuantumProgram
+import random
 from enum import Enum
 from qcatsweeper import qconfig
 
-import qiskit
-import math
-import random
-import quantumrandom as qr
+from qiskit import QuantumProgram
 
 
 class TileItems(Enum):
@@ -22,8 +19,6 @@ class TileItems(Enum):
 
     BOMB_UNEXPLODED = 9
     BOMB_EXPLODED = 10
-
-    #REVEAL_GROUP = 9
 
     GOLDEN_CAT = 11
     FLAG = 12
@@ -66,39 +61,45 @@ def get_one_or_zero(grid_script, q, c, index):
 def new_game_grid(grid_size, bomb_no=20):
     game_grid = [[TileItems.BLANKS for i in range(grid_size)] for j in range(grid_size)]
 
-    # construct groups of numbers for tiles
-    _cur = 0
-    _tiles = [TileItems.TILE1, TileItems.TILE2, TileItems.TILE3, TileItems.TILE4,
-              TileItems.TILE5, TileItems.TILE6, TileItems.TILE7, TileItems.TILE8]
-    print(_tiles)
-    #_index = [TileItems.GROUP1, TileItems.GROUP2, TileItems.GROUP3,
-    #          TileItems.GROUP4, TileItems.GROUP5, TileItems.GROUP6]
-    #random.shuffle(_tiles)
-    #_groups = [[random.randint(0, 1) for i in range(l)] for i in range(l)]
-
-    #for y in range(0, l, 4):
-    #    for x in range(0, l, 6):
-    #        for _y in range(y, y + 4):
-    #            for _x in range(x, x + 6):
-    #                if _groups[_y][_x] >= 1:
-    #                    game_grid[_y][_x] = _index[_cur]
-    #        _cur += 1
-
-    # Quantum ANU random number generator to generate 20 bomb positions
-    #bomb_xy = [int(random.randint(0, 64554)) for i in range(bomb_no * 2)]
-    #bomb_xy = list(map(lambda x: x % grid_size, bomb_xy))
     # classical random number generator for debugging
     bomb_xy = [random.randint(0, grid_size-1) for i in range(bomb_no * 2)]
     bomb_xy = [bomb_xy[i:i + 2] for i in range(0, bomb_no * 2, 2)]
-
+    # add Bombs
     for coord in bomb_xy:
         if len(coord) > 0:
             game_grid[coord[0]][coord[1]] = TileItems.BOMB_UNEXPLODED
 
-    # golden Cat
+    # add number Tiles
+    game_grid = add_number_tiles(game_grid, grid_size)
+
+    # add golden Cat
     game_grid[random.randint(0, grid_size - 1)][random.randint(0, grid_size - 1)] = TileItems.GOLDEN_CAT
 
     return game_grid
+
+
+def add_number_tiles(game_grid: list, grid_size: int):
+    for row in range(len(game_grid)):
+        for col in range(len(game_grid[row])):
+            if game_grid[row][col] != TileItems.BOMB_UNEXPLODED and game_grid[row][col] != TileItems.GOLDEN_CAT:
+                number = number_of_bombs(row, col, game_grid, grid_size) # Compte les bombes autour (le "gros" du code)
+                if number > 0:
+                    game_grid[row][col] = TileItems['TILE' + str(number)]
+
+    return game_grid
+
+
+def number_of_bombs(row, col, game_grid, grid_size: int):
+    # if  row == 0 and col == 0: #coin haut et gauche
+    bombs = 0
+
+    # On parcourt toutes les cases autours
+    for y in range(row - 1, row + 2):
+        for x in range(col - 1, col + 2):
+            if (y >= 0) and (y < grid_size) and (x >= 0) and (x < grid_size): # Si la case existe
+                if game_grid[y][x] == TileItems.BOMB_UNEXPLODED: # Si la case est une bombe
+                    bombs += 1
+    return bombs
 
 
 def onclick(clicked_tile):

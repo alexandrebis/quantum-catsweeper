@@ -20,7 +20,7 @@ def is_within(x, y, pos):
     return x >= x1 and x <= x2 and y >= y1 and y <= y2
 
 class QuantumCatsweeperApp:
-    def __init__(self, width=153, height=170, debugging=False):
+    def __init__(self, width=149, height=165, debugging=False):
         # Initialize game state
         self.game_state = GameState.INTRO
         self.debugging = debugging
@@ -229,11 +229,6 @@ class QuantumCatsweeperApp:
                             self.swap_golden_cat_with(
                                 self.golden_cat_x, self.golden_cat_y + offset_y)
 
-                    if reveal_state is None or reveal_state is ql.TileItems.NEG_EVAL:
-                        self.game_grid_evaled[(row, col)] = str(
-                            abs(clicked_tile.value)) + '!'
-                        return
-
                     # When bomb doesn't explode it turns into blank
                     if reveal_state is ql.TileItems.BOMB_DEFUSED:
                         self.game_grid[row][col] = ql.TileItems.BOMB_DEFUSED
@@ -396,12 +391,12 @@ class QuantumCatsweeperApp:
     def draw_helpscreen(self):
         self.pyxel_text_centered(20, 'HELP', pyxel.frame_count % 16)
         # Information
-        self.pyxel_text_centered(40, 'Don\'t explode the cats!', 7)
-        self.pyxel_text_centered(50, 'Numbers indicate number of', 7)
-        self.pyxel_text_centered(60, 'tiles needed to reveal', 7)
-        self.pyxel_text_centered(70, 'the whole group. If there is', 7)
-        self.pyxel_text_centered(80, 'a ! then your click doesn\'t', 7)
-        self.pyxel_text_centered(90, 'count. Find the golden cat', 7)
+        self.pyxel_text_centered(40, 'Welcome to Catsweeper !', 7)
+        self.pyxel_text_centered(50, 'Cat-bombs have 50% chance', 7)
+        self.pyxel_text_centered(60, 'to explode. If you click', 7)
+        self.pyxel_text_centered(70, 'on a cat-bomb and it is', 7)
+        self.pyxel_text_centered(80, 'upside-down, you were lucky !', 7)
+        self.pyxel_text_centered(90, 'Find the golden cat', 7)
         self.pyxel_text_centered(100, 'to win!', 7)
         self.pyxel_button_centered('Back', 135)
 
