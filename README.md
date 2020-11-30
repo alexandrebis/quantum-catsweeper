@@ -13,7 +13,7 @@ This is an almost regular Minesweeper that runs on the [IBM Quantum computer](ht
 ## Game Over
 ![Game Over](https://github.com/alexandrebis/quantum-catsweeper/blob/feature/flag-and-tiles/images/lost.png)
 
-##Game Won
+## Game Won
 ![Game Over](https://github.com/alexandrebis/quantum-catsweeper/blob/feature/flag-and-tiles/images/won.PNG)
 
 # Technical Explanation
