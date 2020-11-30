@@ -10,14 +10,11 @@ This is an almost regular Minesweeper that runs on the [IBM Quantum computer](ht
 
 ![Front Screen](https://github.com/desireevl/quantum-catsweeper/blob/master/images/mainscreen.PNG)
 
-## Game Page
-![Game Screen](https://github.com/desireevl/quantum-catsweeper/blob/master/images/playin.PNG)
-
 ## Game Over
-![Game Over](https://github.com/desireevl/quantum-catsweeper/blob/master/images/lost.png)
+![Game Over](https://github.com/alexandrebis/quantum-catsweeper/blob/feature/flag-and-tiles/images/lost.png)
 
 ##Game Won
-![Game Over](https://github.com/desireevl/quantum-catsweeper/blob/master/images/won.PNG)
+![Game Over](https://github.com/alexandrebis/quantum-catsweeper/blob/feature/flag-and-tiles/images/won.PNG)
 
 # Technical Explanation
 
