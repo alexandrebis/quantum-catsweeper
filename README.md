@@ -22,11 +22,11 @@ This is an almost regular Minesweeper that runs on the [IBM Quantum computer](ht
 A Hadamard gate is used on the qubit that represents the bomb and when the tile is clicked, the qubit is measured. It has a 50/50 chance of evaluating to a 1 (bomb explodes) or a 0 (bomb defuses).
 
 ## Golden Cat
-The golden cat moves around based on your click. If you find it you win 100% of the time. 
+The golden cat moves around based on your click. If you find it, you win 100% of the time. 
 
-If you click on a tile that is not an exploding bomb (number tile, defused cat, blank tiles) then the golden cat moves one space in the direction of the tile you just clicked.
+If you click on a tile that is not an exploding bomb nor a blank tile (number tile, defused cat) then the golden cat moves one space in the direction of the tile you just clicked.
 
-If a negatively evaluated tile is clicked the golden cat moves one space away.
+If a negatively evaluated bomb is clicked, the golden cat moves one space away.
 
 This knowledge can be used as strategy to win the game. 
 
