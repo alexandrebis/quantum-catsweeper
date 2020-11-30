@@ -16,6 +16,7 @@ class TileItems(Enum):
     TILE6 = 6
     TILE7 = 7
     TILE8 = 8
+    TILE_NUMBERS = [TILE1, TILE2, TILE3, TILE4, TILE5, TILE6, TILE7, TILE8]
 
     BOMB_UNEXPLODED = 9
     BOMB_EXPLODED = 10
@@ -121,8 +122,5 @@ def onclick(clicked_tile):
             return TileItems.BOMB_EXPLODED
         return TileItems.BOMB_DEFUSED
 
-    elif (clicked_tile == TileItems.BLANKS):
-        return TileItems.BLANKS
-
-
-    return None
+    else:
+        return clicked_tile

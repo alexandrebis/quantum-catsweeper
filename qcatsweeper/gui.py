@@ -215,8 +215,8 @@ class QuantumCatsweeperApp:
                                 self.golden_cat_x, self.golden_cat_y + offset_y)
 
                     if reveal_state is ql.TileItems.POS_EVAL or \
-                            reveal_state is ql.TileItems.BOMB_DEFUSED or \
-                            reveal_state is ql.TileItems.BLANKS:
+                            reveal_state is ql.TileItems.BOMB_DEFUSED \
+                            or reveal_state.value in ql.TileItems.TILE_NUMBERS.value:
                         # TODO: Move golden cat towards item
                         offset_x = 1 if self.golden_cat_x < col else -1
                         offset_x = 0 if self.golden_cat_x == col else offset_x
