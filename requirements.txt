@@ -1,4 +1,4 @@
 pyxel
-qiskit==0.5.7
+qiskit
 quantumrandom
 numpy==1.19.3
