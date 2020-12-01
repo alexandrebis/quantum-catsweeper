@@ -1,0 +1,39 @@
+# Changelog
+
+## Last version (30/11/2020)
+
+### Added
+
+- Minesweeper logic
+- Number tiles
+- Put a flag on a tile (right mouse click)
+
+### Removed
+
+- Reveal groups
+- Negative eval for tiles
+
+## First version
+
+### Changes
+
+- Lowered the sound and disabled the loop of the main music
+- Changed `LEFT_KEY_BUTTON` to `LEFT_KEY`, then to `LEFT_MOUSE_BUTTON` because why use the left arrow?
+- Replace quantum random by regular random and remove it from requirements
+- Set `pyxel.mouse(True)` to see the cursor
+- Remove IBMQ dependencies as it is not used
+- Set last working numpy version
+- Update README
+
+### Fixes
+- Commented the `qiskit.register()` method as it is deprecated. Will update Qiskit in following versions
+- Changed the order of initialization of window to display the game
+- Move `images` location for the game to load
+
+
+### Changes ideas
+
+Use one of the IBM Quantum backends
+Use a more recent version of Qiskit
+Implement real minesweeper logic
+Correctly size the window
