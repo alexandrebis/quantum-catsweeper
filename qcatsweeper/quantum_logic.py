@@ -1,8 +1,7 @@
 import random
 from enum import Enum
 from qcatsweeper import qconfig
-
-from qiskit import QuantumProgram
+from qiskit import *
 
 
 class TileItems(Enum):
@@ -33,29 +32,32 @@ class TileItems(Enum):
 real_device = False
 shots = 1024
 
-device = 'local_qasm_simulator'
+device = Aer.get_backend('qasm_simulator')
 if real_device:
-    device = 'ibmqx4'
-
-Q_program = QuantumProgram()
+    IBMQ.save_account(qconfig.APItoken)
+    IBMQ.load_account()
+    provider = IBMQ.get_provider(hub='ibm-q')
+    device = provider.get_backend('ibmq_qasm_simulator')
 
 
 # qiskit.register(qconfig.APItoken, qconfig.config["url"])
 
 
-def get_one_or_zero(grid_script, q, c, index):
-    global Q_program
-    # measuring qubit and finding which value has the most outcomes
-    grid_script.measure(q[index], c[index])
-    results = Q_program.execute(
-        ["gridScript"], backend=device, shots=shots, timeout=1800)
-    re = results.get_counts("gridScript")
-    d1 = list(map(lambda x: (x[0], x[1], x[0].count('0')), re.items()))
-    d2 = sorted(d1, key=lambda x: x[2], reverse=True)
+def get_one_or_zero(grid_script, q, c):
 
-    print(d2)
-    if d2[0][1] > d2[1][1]:
+    # measuring qubit and finding which value has the most outcomes
+    grid_script.measure(q, c)
+    results = execute(grid_script, device, shots=shots).result()
+    results_counts = results.get_counts(grid_script)
+    print("results_counts", results_counts)
+
+    if len(results_counts) == 1:
+        print("return 0")
         return 0
+    if results_counts['0'] > results_counts['1']:
+        print("return 0")
+        return 0
+    print("return 1")
     return 1
 
 
@@ -109,16 +111,16 @@ def onclick(clicked_tile):
     clicked_tile: tile type of the clicked tile
     num_click: number of times a group has been clicked
     """
-    q = Q_program.create_quantum_register("q", 5)
-    c = Q_program.create_classical_register("c", 5)
-    gridScript = Q_program.create_circuit("gridScript", [q], [c])
+    q = QuantumRegister(1)
+    c = ClassicalRegister(1)
+    gridScript =  QuantumCircuit(q, c, name='gridScript')
 
     if (clicked_tile == TileItems.BOMB_UNEXPLODED):
         # hadamard gate applied to bomb qubit
-        gridScript.h(q[0])
+        gridScript.h(q)
 
         # if there are more 1 hits then the bomb expodes and the game is lost
-        if get_one_or_zero(gridScript, q, c, 0) == 1:
+        if get_one_or_zero(gridScript, q, c) == 1:
             return TileItems.BOMB_EXPLODED
         return TileItems.BOMB_DEFUSED
 
