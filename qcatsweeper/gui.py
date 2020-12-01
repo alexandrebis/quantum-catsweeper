@@ -339,17 +339,17 @@ class QuantumCatsweeperApp:
                     # Golden Cat
                     elif cur_tile is ql.TileItems.GOLDEN_CAT:
                         pyxel.blt(_x, _y, self._main_tileset,
-                                  16, 0, self._grid_draw_size - 1, self._grid_draw_size - 1, 13)
+                                  16, 0, self._grid_draw_size - 1, self._grid_draw_size - 1, 11)
 
                     # Bomb defused
                     elif cur_tile is ql.TileItems.BOMB_DEFUSED:
                         pyxel.blt(_x, _y, self._main_tileset,
-                                  0, 0, self._grid_draw_size - 1, self._grid_draw_size - 1, 13)
+                                  0, 0, self._grid_draw_size - 1, self._grid_draw_size - 1, 11)
 
                     # Bomb exploded
                     elif cur_tile is ql.TileItems.BOMB_EXPLODED:
                         pyxel.blt(_x, _y, self._main_tileset,
-                                  0, 0, self._grid_draw_size - 1, -1 * (self._grid_draw_size - 1), 13)
+                                  0, 0, self._grid_draw_size - 1, -1 * (self._grid_draw_size - 1), 11)
 
                 # Golden Cat (debug)
                 elif cur_tile is ql.TileItems.GOLDEN_CAT and self.debugging:
@@ -362,7 +362,7 @@ class QuantumCatsweeperApp:
                     pyxel.rect(_x, _y, _x + self._grid_draw_size -
                                2, _y - 2 + self._grid_draw_size, 5)
                     pyxel.blt(_x, _y, self._main_tileset,
-                              32, 0, self._grid_draw_size - 1, self._grid_draw_size - 1, 13)
+                              32, 0, self._grid_draw_size - 1, self._grid_draw_size - 1, 11)
 
 
                 # Unclicked
@@ -410,7 +410,7 @@ class QuantumCatsweeperApp:
         cat_offset = math.sin(pyxel.frame_count * 0.1) * 2
         cat_flip = 1 if cat_offset >= 0 else -1
         pyxel.blt(cat_x + cat_offset, 62, self._main_tileset,
-                  0, 0, 16 * cat_flip, 16, 13)
+                  0, 0, 16 * cat_flip, 16, 11)
 
         # Draw button
         self.pyxel_button_centered('Play', 100)
