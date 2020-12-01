@@ -29,15 +29,20 @@ class TileItems(Enum):
     BOMB_DEFUSED = 84
 
 
-real_device = False
+real_device = True
 shots = 1024
 
-device = Aer.get_backend('qasm_simulator')
 if real_device:
-    IBMQ.save_account(qconfig.APItoken)
-    IBMQ.load_account()
-    provider = IBMQ.get_provider(hub='ibm-q')
-    device = provider.get_backend('ibmq_qasm_simulator')
+    try:
+        IBMQ.save_account(qconfig.APItoken, overwrite=True)
+        IBMQ.load_account()
+        provider = IBMQ.get_provider(hub='ibm-q')
+        device = provider.get_backend('ibmq_qasm_simulator')
+    except qiskit.providers.ibmq.api.exceptions.RequestsApiError:
+        print("Could not load IBMQ account. Using local qasm_simulator.\nError : ", sys.exc_info()[1])
+        device = Aer.get_backend('qasm_simulator')
+else:
+    device = Aer.get_backend('qasm_simulator')
 
 
 # qiskit.register(qconfig.APItoken, qconfig.config["url"])
